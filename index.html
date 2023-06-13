@@ -173,5 +173,16 @@
       a.click();
     }
   </script>
+  <!-- Scripts JavaScript -->
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script>
+  // Verificação do carregamento da biblioteca
+  if (typeof XLSX !== 'undefined') {
+    console.log('A biblioteca SheetJS foi carregada corretamente.');
+  } else {
+    console.log('Erro ao carregar a biblioteca SheetJS.');
+  }
+</script>
+
 </body>
 </html>
