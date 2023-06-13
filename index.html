@@ -2,29 +2,100 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lista de Clientes</title>
   <style>
-    /* Estilos CSS do código anterior */
-
-    .new-client-form {
-      display: none;
-      background-color: #f2f2f2;
-      padding: 10px;
-      margin-bottom: 10px;
+    * {
+      box-sizing: border-box;
     }
 
-    .new-client-form input[type="text"] {
-      padding: 8px;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .search-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
       font-size: 16px;
       border-radius: 4px;
       border: 1px solid #ccc;
-      margin-right: 10px;
     }
 
-    .new-client-form button {
-      padding: 8px 16px;
+    .clients-table {
+      width: 100%;
+      margin-bottom: 20px;
+      border-collapse: collapse;
+    }
+
+    .clients-table th,
+    .clients-table td {
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .add-client-button {
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+      padding: 10px;
       font-size: 16px;
-      border: none;
+      border-radius: 4px;
+      background-color: #66cc66;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .new-client-form {
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    .new-client-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .new-client-form input[type="text"] {
+      width: 100%;
+      max-width: 400px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    .new-client-form .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .cancel-button,
+    .submit-button {
+      padding: 10px 20px;
+      font-size: 16px;
       border-radius: 4px;
       cursor: pointer;
     }
@@ -42,92 +113,65 @@
     .error-message {
       color: red;
       font-weight: bold;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+
+      .add-client-button,
+      .new-client-form input[type="text"] {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Lista de Clientes</h1>
+  <div class="container">
+    <h1>Lista de Clientes</h1>
 
-  <div class="search-container">
-    <!-- Campo de busca -->
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Pesquisar clientes">
+    </div>
+
+    <table class="clients-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Razão Social</th>
+          <th>CNPJ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Linhas de clientes serão adicionadas dinamicamente -->
+      </tbody>
+    </table>
+
+    <a href="#" class="add-client-button">Adicionar Novo Cliente</a>
+
+    <div class="new-client-form">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" placeholder="Digite o nome">
+
+      <label for="razaoSocial">Razão Social:</label>
+      <input type="text" id="razaoSocial" name="razaoSocial" placeholder="Digite a razão social">
+
+      <label for="cnpj">CNPJ:</label>
+      <input type="text" id="cnpj" name="cnpj" placeholder="Digite o CNPJ">
+
+      <div class="buttons">
+        <button class="cancel-button">Cancelar</button>
+        <button class="submit-button">OK</button>
+      </div>
+
+      <p class="error-message"></p>
+    </div>
   </div>
-
-  <table id="clientes-table">
-    <!-- Cabeçalho da tabela -->
-  </table>
-
-  <div class="new-client-form">
-    <input type="text" id="nome-input" placeholder="Nome">
-    <input type="text" id="razao-social-input" placeholder="Razão Social">
-    <input type="text" id="cnpj-input" placeholder="CNPJ">
-    <button class="cancel-button">x</button>
-    <button class="submit-button">ok</button>
-    <p class="error-message" style="display: none;"></p>
-  </div>
-
-  <button id="new-client-button">Adicionar Novo Cliente</button>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const newClientForm = document.querySelector(".new-client-form");
-      const newClientButton = document.getElementById("new-client-button");
-      const cancelButton = document.querySelector(".cancel-button");
-      const submitButton = document.querySelector(".submit-button");
-      const errorMessage = document.querySelector(".error-message");
-      const clientesTable = document.getElementById("clientes-table");
-
-      // Função para exibir o formulário de novo cliente
-      function showNewClientForm() {
-        newClientForm.style.display = "block";
-        errorMessage.style.display = "none";
-        newClientButton.disabled = true;
-      }
-
-      // Função para ocultar o formulário de novo cliente
-      function hideNewClientForm() {
-        newClientForm.style.display = "none";
-        newClientButton.disabled = false;
-      }
-
-      // Função para adicionar um novo cliente ao banco de dados
-      function adicionarCliente() {
-        const nomeInput = document.getElementById("nome-input");
-        const razaoSocialInput = document.getElementById("razao-social-input");
-        const cnpjInput = document.getElementById("cnpj-input");
-
-        const nome = nomeInput.value.trim();
-        const razaoSocial = razaoSocialInput.value.trim();
-        const cnpj = cnpjInput.value.trim();
-
-        if (nome || razaoSocial || cnpj) {
-          // Implemente aqui a lógica para adicionar o cliente ao banco de dados
-          const newClientRow = clientesTable.insertRow();
-
-          const nomeCell = newClientRow.insertCell();
-          nomeCell.textContent = nome;
-
-          const razaoSocialCell = newClientRow.insertCell();
-          razaoSocialCell.textContent = razaoSocial;
-
-          const cnpjCell = newClientRow.insertCell();
-          cnpjCell.textContent = cnpj;
-
-          hideNewClientForm();
-        } else {
-          errorMessage.textContent = "Preencha pelo menos um campo";
-          errorMessage.style.display = "block";
-        }
-      }
-
-      // Evento de clique no botão "Adicionar Novo Cliente"
-      newClientButton.addEventListener("click", showNewClientForm);
-
-      // Evento de clique no botão "Cancelar"
-      cancelButton.addEventListener("click", hideNewClientForm);
-
-      // Evento de clique no botão "OK"
-      submitButton.addEventListener("click", adicionarCliente);
-    });
+    // Código JavaScript aqui
   </script>
 </body>
 </html>
