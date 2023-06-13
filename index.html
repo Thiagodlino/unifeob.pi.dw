@@ -1,78 +1,177 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="UTF-8">
-    <title>Gerenciamento de Clientes</title>
-    <link rel="stylesheet" href="styles.css">
+  <title>Cadastro de Clientes</title>
+  <style>
+    /* Estilos CSS para tornar a interface amigável */
+    body {
+      font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+      text-align: center;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    table th, table td {
+      padding: 8px;
+      border: 1px solid #ddd;
+    }
+    
+    input[type="text"] {
+      padding: 5px;
+      width: 300px;
+      margin-right: 10px;
+    }
+    
+    #add-cliente-button {
+      padding: 5px 10px;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h1>Gerenciamento de Clientes</h1>
+  <h1>Cadastro de Clientes</h1>
+  
+  <!-- Tabela para exibir os clientes -->
+  <table id="clientes-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Razão Social</th>
+        <th>CNPJ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Aqui serão adicionadas as linhas com os clientes -->
+    </tbody>
+  </table>
+  
+  <!-- Campo de busca -->
+  <input type="text" id="search-input" placeholder="Buscar cliente">
+  
+  <!-- Botão de adicionar cliente -->
+  <button id="add-cliente-button">Adicionar Cliente</button>
 
-        <input type="text" id="search-input" class="search-input" placeholder="Buscar cliente...">
-        <table id="clientes-table">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Razão Social</th>
-                    <th>CNPJ</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Os dados dos clientes serão preenchidos aqui dinamicamente -->
-            </tbody>
-        </table>
-
-        <button id="add-client-btn" class="add-client-btn">Adicionar Novo Cliente</button>
-
-        <div id="add-client-form" class="add-client-form">
-            <input type="text" id="nome-input" placeholder="Nome">
-            <input type="text" id="razao-social-input" placeholder="Razão Social">
-            <input type="text" id="cnpj-input" placeholder="CNPJ">
-            <div class="add-client-btns">
-                <button id="cancel-btn" class="add-client-btns">Cancelar</button>
-                <button id="save-btn" class="add-client-btns">Salvar</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="xlsx.full.min.js"></script>
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var fileInput = document.getElementById('file-input');
-
-            fileInput.addEventListener('change', function (e) {
-                var file = e.target.files[0];
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    var data = new Uint8Array(e.target.result);
-                    var workbook = XLSX.read(data, { type: 'array' });
-
-                    var worksheet = workbook.Sheets[workbook.SheetNames[0]];
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-                    var tableBody = document.querySelector('#clientes-table tbody');
-                    tableBody.innerHTML = '';
-
-                    for (var i = 1; i < jsonData.length; i++) {
-                        var row = document.createElement('tr');
-                        for (var j = 0; j < jsonData[i].length; j++) {
-                            var cell = document.createElement('td');
-                            cell.textContent = jsonData[i][j];
-                            row.appendChild(cell);
-                        }
-                        tableBody.appendChild(row);
-                    }
-                };
-
-                reader.readAsArrayBuffer(file);
-            });
-        });
-    </script>
+  <!-- Scripts JavaScript -->
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <script>
+    // Event listener para quando a página é carregada
+    document.addEventListener('DOMContentLoaded', function() {
+      // Carrega os clientes do arquivo 'Clientes.xlsx' quando a página é carregada
+      loadClientesFromExcel();
+      
+      // Event listener para o campo de busca
+      var searchInput = document.getElementById('search-input');
+      searchInput.addEventListener('keyup', function() {
+        filterClientes(searchInput.value);
+      });
+      
+      // Event listener para o botão de adicionar cliente
+      var addClienteButton = document.getElementById('add-cliente-button');
+      addClienteButton.addEventListener('click', function() {
+        addCliente();
+      });
+    });
+    
+    // Função para carregar os clientes do arquivo 'Clientes.xlsx' e exibi-los na tabela
+    function loadClientesFromExcel() {
+      var fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      
+      fileInput.addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+          var data = new Uint8Array(e.target.result);
+          var workbook = XLSX.read(data, {type: 'array'});
+          var worksheet = workbook.Sheets[workbook.SheetNames[0]];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+          
+          var tableBody = document.getElementById('clientes-table').getElementsByTagName('tbody')[0];
+          tableBody.innerHTML = '';
+          
+          for (var i = 1; i < jsonData.length; i++) {
+            var nome = jsonData[i][0];
+            var razaoSocial = jsonData[i][1];
+            var cnpj = jsonData[i][2];
+            
+            addClienteToTable(tableBody, nome, razaoSocial, cnpj);
+          }
+        };
+        
+        reader.readAsArrayBuffer(file);
+      });
+      
+      fileInput.click();
+    }
+    
+    // Função para filtrar os clientes de acordo com o valor digitado no campo de busca
+    function filterClientes(value) {
+      var table = document.getElementById('clientes-table');
+      var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+      
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        var nome = row.cells[0].textContent.toLowerCase();
+        var razaoSocial = row.cells[1].textContent.toLowerCase();
+        var cnpj = row.cells[2].textContent.toLowerCase();
+        
+        if (nome.indexOf(value.toLowerCase()) > -1 || razaoSocial.indexOf(value.toLowerCase()) > -1 || cnpj.indexOf(value.toLowerCase()) > -1) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      }
+    }
+    
+    // Função para adicionar um novo cliente na tabela e no arquivo 'Clientes.xlsx'
+    function addCliente() {
+      var nome = prompt('Digite o nome do cliente:');
+      var razaoSocial = prompt('Digite a razão social do cliente:');
+      var cnpj = prompt('Digite o CNPJ do cliente:');
+      
+      if (nome && razaoSocial && cnpj) {
+        var tableBody = document.getElementById('clientes-table').getElementsByTagName('tbody')[0];
+        addClienteToTable(tableBody, nome, razaoSocial, cnpj);
+        
+        // Adicionar o cliente ao arquivo 'Clientes.xlsx'
+        var workbook = XLSX.utils.book_new();
+        var worksheet = XLSX.utils.table_to_sheet(tableBody);
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Clientes');
+        
+        var excelBuffer = XLSX.write(workbook, {bookType: 'xlsx', type: 'array'});
+        saveAsExcelFile(excelBuffer, 'Clientes.xlsx');
+      }
+    }
+    
+    // Função auxiliar para adicionar uma nova linha com um cliente na tabela
+    function addClienteToTable(tableBody, nome, razaoSocial, cnpj) {
+      var row = tableBody.insertRow();
+      var nomeCell = row.insertCell(0);
+      var razaoSocialCell = row.insertCell(1);
+      var cnpjCell = row.insertCell(2);
+      
+      nomeCell.textContent = nome;
+      razaoSocialCell.textContent = razaoSocial;
+      cnpjCell.textContent = cnpj;
+    }
+    
+    // Função auxiliar para salvar o arquivo 'Clientes.xlsx'
+    function saveAsExcelFile(buffer, fileName) {
+      var blob = new Blob([buffer], {type: 'application/octet-stream'});
+      var url = URL.createObjectURL(blob);
+      
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+    }
+  </script>
 </body>
-
 </html>
