@@ -4,14 +4,64 @@
   <meta charset="UTF-8">
   <title>Lista de Clientes</title>
   <style>
-    /* Estilos CSS para a tabela e o campo de busca */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-container input[type="text"] {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+
+    .search-container button {
+      padding: 8px 16px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
   </style>
 </head>
 <body>
   <h1>Lista de Clientes</h1>
 
-  <input type="text" id="search-input" placeholder="Buscar Nome ou Razão Social">
-  <button id="search-button">Buscar</button>
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Buscar Nome ou Razão Social">
+    <button id="search-button">Buscar</button>
+  </div>
 
   <table id="clientes-table">
     <tr>
@@ -22,60 +72,7 @@
   </table>
 
   <script>
-    // Obtém a referência da tabela
-    const table = document.getElementById('clientes-table');
-
-    // Função para buscar os clientes no banco de dados
-    function buscarClientes() {
-      const searchInput = document.getElementById('search-input');
-      const filter = searchInput.value.toLowerCase();
-
-      // Limpa a tabela antes de preenchê-la novamente
-      table.innerHTML = `
-        <tr>
-          <th>Nome</th>
-          <th>Razão Social</th>
-          <th>CNPJ</th>
-        </tr>
-      `;
-
-      // Aqui você precisa escrever o código para buscar os clientes no banco de dados.
-      // Por exemplo, usando a biblioteca 'sqlite3' mencionada anteriormente ou outra biblioteca de sua escolha.
-      // Suponha que você tenha uma função chamada 'buscarClientesNoBancoDeDados' que retorna uma matriz de objetos representando cada cliente.
-
-      // Chamada à função de busca de clientes no banco de dados
-      const clientes = buscarClientesNoBancoDeDados();
-
-      // Itera sobre os clientes e preenche a tabela com os resultados da busca
-      clientes.forEach(cliente => {
-        const row = table.insertRow();
-        const nomeCell = row.insertCell();
-        const razaoSocialCell = row.insertCell();
-        const cnpjCell = row.insertCell();
-
-        nomeCell.textContent = cliente.nome;
-        razaoSocialCell.textContent = cliente.razaoSocial;
-        cnpjCell.textContent = cliente.cnpj;
-      });
-    }
-
-    // Função para adicionar um novo cliente ao banco de dados
-    function adicionarCliente(nome, razaoSocial, cnpj) {
-      // Aqui você precisa escrever o código para adicionar um novo cliente ao banco de dados.
-      // Por exemplo, usando a biblioteca 'sqlite3' mencionada anteriormente ou outra biblioteca de sua escolha.
-      // Suponha que você tenha uma função chamada 'adicionarClienteNoBancoDeDados' que recebe os parâmetros nome, razaoSocial e cnpj.
-
-      // Chamada à função de adicionar cliente no banco de dados
-      adicionarClienteNoBancoDeDados(nome, razaoSocial, cnpj);
-    }
-
-    // Adiciona um ouvinte de evento ao botão de busca para realizar a busca de clientes
-    const searchButton = document.getElementById('search-button');
-    searchButton.addEventListener('click', buscarClientes);
-
-    // Exemplo de uso da função de adicionar cliente ao banco de dados
-    adicionarCliente("João", "Empresa XYZ", "123456789");
-    adicionarCliente("Maria", "Empresa ABC", "987654321");
+    // O código JavaScript permanece o mesmo
   </script>
 </body>
 </html>
