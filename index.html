@@ -8,6 +8,10 @@
   <style>
     /* Estilos CSS aqui */
 
+    body {
+      font-family: Arial, sans-serif;
+    }
+
     .container {
       max-width: 800px;
       margin: 0 auto;
@@ -21,6 +25,15 @@
     .search-container {
       text-align: center;
       margin-bottom: 20px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
     }
 
     .clients-table {
@@ -37,7 +50,7 @@
     .add-client-button {
       display: block;
       width: 200px;
-      margin: 0 auto;
+      margin: 20px auto;
       padding: 10px;
       text-align: center;
       background-color: #007bff;
@@ -54,8 +67,9 @@
     .new-client-form {
       display: none;
       margin-top: 20px;
-      border: 1px solid #ccc;
       padding: 20px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
     }
 
     .new-client-form label {
@@ -69,8 +83,9 @@
       margin-bottom: 10px;
     }
 
-    .new-client-form .buttons {
+    .buttons {
       text-align: center;
+      margin-top: 10px;
     }
 
     .cancel-button,
@@ -78,6 +93,7 @@
       padding: 10px 20px;
       border-radius: 5px;
       transition: background-color 0.3s ease;
+      cursor: pointer;
     }
 
     .cancel-button {
@@ -115,7 +131,7 @@
     <h1>Meu Site</h1>
 
     <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Buscar clientes">
+      <input type="text" id="searchInput" class="search-input" placeholder="Buscar clientes">
     </div>
 
     <table class="clients-table">
@@ -126,12 +142,14 @@
           <th>CNPJ</th>
         </tr>
       </thead>
-      <tbody>
-        <!-- Linhas de clientes serão adicionadas dinamicamente -->
+      <tbody id="clientsTableBody">
+        <!-- Linhas da tabela serão adicionadas dinamicamente pelo JavaScript -->
       </tbody>
     </table>
 
-    <a href="#" class="add-client-button">Adicionar Novo Cliente</a>
+    <a href="https://drive.google.com/file/d/1VHzWYsyi-8Wtyb49RNNhhcG5V58Jat_t/view?usp=sharing" download>Download do Arquivo DB</a>
+
+    <button class="add-client-button">Adicionar Novo Cliente</button>
 
     <div class="new-client-form">
       <label for="nome">Nome:</label>
@@ -153,59 +171,43 @@
   </div>
 
   <script>
-// Captura os elementos HTML relevantes
-const addClientButton = document.querySelector(".add-client-button");
-const newClientForm = document.querySelector(".new-client-form");
-const cancelButton = document.querySelector(".cancel-button");
-const submitButton = document.querySelector(".submit-button");
-const errorMessage = document.querySelector(".error-message");
+    // Código JavaScript aqui
 
-// Função para exibir o formulário de adicionar novo cliente
-function showNewClientForm() {
-  newClientForm.style.display = "block";
-}
+    const addClientButton = document.querySelector('.add-client-button');
+    const newClientForm = document.querySelector('.new-client-form');
+    const cancelButton = document.querySelector('.cancel-button');
+    const submitButton = document.querySelector('.submit-button');
+    const errorMessage = document.querySelector('.error-message');
 
-// Função para ocultar o formulário de adicionar novo cliente
-function hideNewClientForm() {
-  newClientForm.style.display = "none";
-}
+    addClientButton.addEventListener('click', () => {
+      newClientForm.style.display = 'block';
+    });
 
-// Função para adicionar um novo cliente
-function addNewClient() {
-  const nome = document.getElementById("nome").value;
-  const razaoSocial = document.getElementById("razaoSocial").value;
-  const cnpj = document.getElementById("cnpj").value;
+    cancelButton.addEventListener('click', () => {
+      newClientForm.style.display = 'none';
+    });
 
-  // Verifica se o nome e/ou razão social e CNPJ estão preenchidos
-  if (!nome && !razaoSocial && !cnpj) {
-    errorMessage.textContent = "Por favor, preencha pelo menos um dos campos.";
-    return;
-  }
+    submitButton.addEventListener('click', () => {
+      const nomeInput = document.getElementById('nome');
+      const razaoSocialInput = document.getElementById('razaoSocial');
+      const cnpjInput = document.getElementById('cnpj');
 
-  // Lógica para adicionar o cliente ao banco de dados
-  // Substitua este código com a lógica apropriada para interagir com o banco de dados
+      const nome = nomeInput.value.trim();
+      const razaoSocial = razaoSocialInput.value.trim();
+      const cnpj = cnpjInput.value.trim();
 
-  // Limpa os campos do formulário
-  document.getElementById("nome").value = "";
-  document.getElementById("razaoSocial").value = "";
-  document.getElementById("cnpj").value = "";
-
-  // Exibe uma mensagem de sucesso
-  alert("Cliente adicionado com sucesso!");
-
-  // Oculta o formulário
-  hideNewClientForm();
-}
-
-// Evento de clique no botão "Adicionar Novo Cliente"
-addClientButton.addEventListener("click", showNewClientForm);
-
-// Evento de clique no botão "Cancelar"
-cancelButton.addEventListener("click", hideNewClientForm);
-
-// Evento de clique no botão "OK"
-submitButton.addEventListener("click", addNewClient);
-
+      if (nome === '' && razaoSocial === '' && cnpj === '') {
+        errorMessage.textContent = 'Digite pelo menos um campo: Nome, Razão Social ou CNPJ.';
+      } else {
+        // Adicione aqui a lógica para adicionar o novo cliente ao banco de dados
+        // e atualizar a tabela
+        errorMessage.textContent = '';
+        newClientForm.style.display = 'none';
+        nomeInput.value = '';
+        razaoSocialInput.value = '';
+        cnpjInput.value = '';
+      }
+    });
   </script>
 </body>
 
