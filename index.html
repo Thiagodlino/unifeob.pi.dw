@@ -1,76 +1,118 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>Lista de Clientes</title>
-  <style>
-    /* Estilos CSS para a tabela */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Gerenciamento de Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f5f5f5;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .add-client-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .add-client-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .add-client-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .add-client-btns {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .add-client-btns button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Lista de Clientes</h1>
-  
-  <!-- Tabela para exibir os clientes -->
-  <table id="clientes-table">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Razão Social</th>
-        <th>CNPJ</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Os clientes serão adicionados dinamicamente aqui -->
-    </tbody>
-  </table>
+    <div class="container">
+        <h1>Gerenciamento de Clientes</h1>
 
-  <!-- Inclua o script JavaScript para ler os dados do arquivo Excel -->
-  <script src="xlsx.full.min.js"></script>
-  <script>
-    // Função para ler o arquivo Excel e exibir os clientes na tabela
-    function lerClientesDoExcel() {
-      var arquivo = 'clientes.xlsx'; // Nome do arquivo Excel
-      var workbook = XLSX.readFile(arquivo); // Ler o arquivo Excel
+        <input type="text" id="search-input" class="search-input" placeholder="Buscar cliente...">
+        <table id="clientes-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Razão Social</th>
+                    <th>CNPJ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Os dados dos clientes serão preenchidos aqui dinamicamente -->
+            </tbody>
+        </table>
 
-      var primeiraPlanilha = workbook.SheetNames[0]; // Obter o nome da primeira planilha
-      var worksheet = workbook.Sheets[primeiraPlanilha]; // Obter a primeira planilha
+        <button id="add-client-btn" class="add-client-btn">Adicionar Novo Cliente</button>
 
-      var clientes = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Converter a planilha em um array de objetos JSON
+        <div id="add-client-form" class="add-client-form">
+            <input type="text" id="nome-input" placeholder="Nome">
+            <input type="text" id="razao-social-input" placeholder="Razão Social">
+            <input type="text" id="cnpj-input" placeholder="CNPJ">
+            <div class="add-client-btns">
+                <button id="cancel-btn" class="add-client-btns">Cancelar</button>
+                <button id="save-btn" class="add-client-btns">Salvar</button>
+            </div>
+        </div>
+    </div>
 
-      var tableBody = document.getElementById('clientes-table').getElementsByTagName('tbody')[0];
-
-      // Limpar a tabela antes de adicionar os clientes
-      tableBody.innerHTML = '';
-
-      // Adicionar cada cliente à tabela
-      clientes.forEach(function(cliente) {
-        var nome = cliente[0];
-        var razaoSocial = cliente[1];
-        var cnpj = cliente[2];
-
-        var row = tableBody.insertRow();
-        var cellNome = row.insertCell(0);
-        var cellRazaoSocial = row.insertCell(1);
-        var cellCnpj = row.insertCell(2);
-
-        cellNome.innerHTML = nome;
-        cellRazaoSocial.innerHTML = razaoSocial;
-        cellCnpj.innerHTML = cnpj;
-      });
-    }
-
-    // Chamar a função para ler os clientes do Excel quando a página carregar
-    window.onload = function() {
-      lerClientesDoExcel();
-    };
-  </script>
+    <script src="xlsx.full.min.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
