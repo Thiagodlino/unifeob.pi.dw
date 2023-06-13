@@ -1,214 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Site</title>
+  <title>Lista de Clientes</title>
   <style>
-    /* Estilos CSS aqui */
-
-    body {
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-    }
-
-    .search-container {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-
-    .clients-table {
+    /* Estilos CSS para a tabela */
+    table {
       width: 100%;
       border-collapse: collapse;
     }
-
-    .clients-table th,
-    .clients-table td {
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .add-client-button {
-      display: block;
-      width: 200px;
-      margin: 20px auto;
-      padding: 10px;
-      text-align: center;
-      background-color: #007bff;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    .add-client-button:hover {
-      background-color: #0056b3;
-    }
-
-    .new-client-form {
-      display: none;
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #f2f2f2;
-      border-radius: 5px;
-    }
-
-    .new-client-form label {
-      display: block;
-      margin-bottom: 10px;
-    }
-
-    .new-client-form input[type="text"] {
-      width: 100%;
-      padding: 5px;
-      margin-bottom: 10px;
-    }
-
-    .buttons {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .cancel-button,
-    .submit-button {
-      padding: 10px 20px;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-      cursor: pointer;
-    }
-
-    .cancel-button {
-      background-color: #dc3545;
-      color: #fff;
-      margin-right: 10px;
-    }
-
-    .submit-button {
-      background-color: #28a745;
-      color: #fff;
-    }
-
-    .error-message {
-      color: #dc3545;
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 600px) {
-      /* Estilos para dispositivos móveis */
-      .container {
-        padding: 10px;
-      }
-
-      .add-client-button {
-        width: 100%;
-      }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
     }
   </style>
 </head>
-
 <body>
-  <div class="container">
-    <h1>Meu Site</h1>
+  <h1>Lista de Clientes</h1>
+  
+  <!-- Tabela para exibir os clientes -->
+  <table id="clientes-table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Razão Social</th>
+        <th>CNPJ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Os clientes serão adicionados dinamicamente aqui -->
+    </tbody>
+  </table>
 
-    <div class="search-container">
-      <input type="text" id="searchInput" class="search-input" placeholder="Buscar clientes">
-    </div>
-
-    <table class="clients-table">
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Razão Social</th>
-          <th>CNPJ</th>
-        </tr>
-      </thead>
-      <tbody id="clientsTableBody">
-        <!-- Linhas da tabela serão adicionadas dinamicamente pelo JavaScript -->
-      </tbody>
-    </table>
-
-    <a href="https://drive.google.com/file/d/1VHzWYsyi-8Wtyb49RNNhhcG5V58Jat_t/view?usp=sharing" download>Download do Arquivo DB</a>
-
-    <button class="add-client-button">Adicionar Novo Cliente</button>
-
-    <div class="new-client-form">
-      <label for="nome">Nome:</label>
-      <input type="text" id="nome" name="nome" placeholder="Digite o nome">
-
-      <label for="razaoSocial">Razão Social:</label>
-      <input type="text" id="razaoSocial" name="razaoSocial" placeholder="Digite a razão social">
-
-      <label for="cnpj">CNPJ:</label>
-      <input type="text" id="cnpj" name="cnpj" placeholder="Digite o CNPJ">
-
-      <div class="buttons">
-        <button class="cancel-button">Cancelar</button>
-        <button class="submit-button">OK</button>
-      </div>
-
-      <p class="error-message"></p>
-    </div>
-  </div>
-
+  <!-- Inclua o script JavaScript para ler os dados do arquivo Excel -->
+  <script src="xlsx.full.min.js"></script>
   <script>
-    // Código JavaScript aqui
+    // Função para ler o arquivo Excel e exibir os clientes na tabela
+    function lerClientesDoExcel() {
+      var arquivo = 'clientes.xlsx'; // Nome do arquivo Excel
+      var workbook = XLSX.readFile(arquivo); // Ler o arquivo Excel
 
-    const addClientButton = document.querySelector('.add-client-button');
-    const newClientForm = document.querySelector('.new-client-form');
-    const cancelButton = document.querySelector('.cancel-button');
-    const submitButton = document.querySelector('.submit-button');
-    const errorMessage = document.querySelector('.error-message');
+      var primeiraPlanilha = workbook.SheetNames[0]; // Obter o nome da primeira planilha
+      var worksheet = workbook.Sheets[primeiraPlanilha]; // Obter a primeira planilha
 
-    addClientButton.addEventListener('click', () => {
-      newClientForm.style.display = 'block';
-    });
+      var clientes = XLSX.utils.sheet_to_json(worksheet, { header: 1 }); // Converter a planilha em um array de objetos JSON
 
-    cancelButton.addEventListener('click', () => {
-      newClientForm.style.display = 'none';
-    });
+      var tableBody = document.getElementById('clientes-table').getElementsByTagName('tbody')[0];
 
-    submitButton.addEventListener('click', () => {
-      const nomeInput = document.getElementById('nome');
-      const razaoSocialInput = document.getElementById('razaoSocial');
-      const cnpjInput = document.getElementById('cnpj');
+      // Limpar a tabela antes de adicionar os clientes
+      tableBody.innerHTML = '';
 
-      const nome = nomeInput.value.trim();
-      const razaoSocial = razaoSocialInput.value.trim();
-      const cnpj = cnpjInput.value.trim();
+      // Adicionar cada cliente à tabela
+      clientes.forEach(function(cliente) {
+        var nome = cliente[0];
+        var razaoSocial = cliente[1];
+        var cnpj = cliente[2];
 
-      if (nome === '' && razaoSocial === '' && cnpj === '') {
-        errorMessage.textContent = 'Digite pelo menos um campo: Nome, Razão Social ou CNPJ.';
-      } else {
-        // Adicione aqui a lógica para adicionar o novo cliente ao banco de dados
-        // e atualizar a tabela
-        errorMessage.textContent = '';
-        newClientForm.style.display = 'none';
-        nomeInput.value = '';
-        razaoSocialInput.value = '';
-        cnpjInput.value = '';
-      }
-    });
+        var row = tableBody.insertRow();
+        var cellNome = row.insertCell(0);
+        var cellRazaoSocial = row.insertCell(1);
+        var cellCnpj = row.insertCell(2);
+
+        cellNome.innerHTML = nome;
+        cellRazaoSocial.innerHTML = razaoSocial;
+        cellCnpj.innerHTML = cnpj;
+      });
+    }
+
+    // Chamar a função para ler os clientes do Excel quando a página carregar
+    window.onload = function() {
+      lerClientesDoExcel();
+    };
   </script>
 </body>
-
 </html>
