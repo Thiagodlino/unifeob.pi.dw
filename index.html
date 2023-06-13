@@ -1,23 +1,76 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banco de Clientes</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Lista de Clientes</title>
+  <style>
+    /* Estilos CSS para a tabela e o campo de busca */
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Banco de Clientes</h1>
-        <!-- Aqui você pode adicionar o formulário de login -->
-    </header>
-    
-    <main>
-        <!-- Aqui você pode adicionar o conteúdo principal da página -->
-    </main>
-    
-    <footer>
-        <p>&copy; 2023 Banco de Clientes. Todos os direitos reservados.</p>
-    </footer>
+  <h1>Lista de Clientes</h1>
+
+  <input type="text" id="search-input" placeholder="Buscar CNPJ">
+
+  <table id="clientes-table">
+    <tr>
+      <th>Nome</th>
+      <th>Razão Social</th>
+      <th>CNPJ</th>
+    </tr>
+  </table>
+
+  <script>
+    // JavaScript para buscar os dados do banco de dados e preencher a tabela
+
+    // Obtém a referência da tabela
+    const table = document.getElementById('clientes-table');
+
+    // Função para buscar os dados do banco de dados
+    function buscarClientes() {
+      // Aqui você precisa escrever o código para buscar os dados do banco de dados.
+      // Pode ser usando a biblioteca 'sqlite3' mencionada anteriormente ou outra biblioteca de sua escolha.
+      // Por exemplo:
+      // const clientes = db.all("SELECT * FROM clientes");
+      // Onde 'db' é a referência ao banco de dados.
+
+      // Depois de obter os dados do banco de dados, você pode iterar sobre eles e preencher a tabela.
+      // Supondo que 'clientes' seja uma matriz de objetos representando cada cliente:
+      clientes.forEach(cliente => {
+        const row = table.insertRow();
+        const nomeCell = row.insertCell();
+        const razaoSocialCell = row.insertCell();
+        const cnpjCell = row.insertCell();
+
+        nomeCell.textContent = cliente.nome;
+        razaoSocialCell.textContent = cliente.razaoSocial;
+        cnpjCell.textContent = cliente.cnpj;
+      });
+    }
+
+    // Função para filtrar os clientes com base no CNPJ digitado no campo de busca
+    function filtrarClientes() {
+      const searchInput = document.getElementById('search-input');
+      const filter = searchInput.value.toLowerCase();
+
+      // Itera sobre as linhas da tabela e exibe ou oculta conforme o CNPJ
+      for (let i = 1; i < table.rows.length; i++) {
+        const cnpj = table.rows[i].cells[2].textContent.toLowerCase();
+
+        if (cnpj.includes(filter)) {
+          table.rows[i].style.display = '';
+        } else {
+          table.rows[i].style.display = 'none';
+        }
+      }
+    }
+
+    // Chama a função buscarClientes para preencher a tabela inicialmente
+    buscarClientes();
+
+    // Adiciona um ouvinte de evento ao campo de busca para filtrar os clientes em tempo real
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('input', filtrarClientes);
+  </script>
 </body>
 </html>
