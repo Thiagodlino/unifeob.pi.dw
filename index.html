@@ -4,23 +4,16 @@
   <meta charset="UTF-8">
   <title>Lista de Clientes</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
+    /* Estilos CSS do código anterior */
+
+    .new-client-form {
+      display: none;
+      background-color: #f2f2f2;
+      padding: 10px;
+      margin-bottom: 10px;
     }
 
-    h1 {
-      text-align: center;
-    }
-
-    .search-container {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .search-container input[type="text"] {
+    .new-client-form input[type="text"] {
       padding: 8px;
       font-size: 16px;
       border-radius: 4px;
@@ -28,30 +21,27 @@
       margin-right: 10px;
     }
 
-    .search-container button {
+    .new-client-form button {
       padding: 8px 16px;
       font-size: 16px;
-      background-color: #4CAF50;
-      color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #4CAF50;
+    .cancel-button {
+      background-color: #ff6666;
       color: white;
+    }
+
+    .submit-button {
+      background-color: #66cc66;
+      color: white;
+    }
+
+    .error-message {
+      color: red;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -59,20 +49,85 @@
   <h1>Lista de Clientes</h1>
 
   <div class="search-container">
-    <input type="text" id="search-input" placeholder="Buscar Nome ou Razão Social">
-    <button id="search-button">Buscar</button>
+    <!-- Campo de busca -->
   </div>
 
   <table id="clientes-table">
-    <tr>
-      <th>Nome</th>
-      <th>Razão Social</th>
-      <th>CNPJ</th>
-    </tr>
+    <!-- Cabeçalho da tabela -->
   </table>
 
+  <div class="new-client-form">
+    <input type="text" id="nome-input" placeholder="Nome">
+    <input type="text" id="razao-social-input" placeholder="Razão Social">
+    <input type="text" id="cnpj-input" placeholder="CNPJ">
+    <button class="cancel-button">x</button>
+    <button class="submit-button">ok</button>
+    <p class="error-message" style="display: none;"></p>
+  </div>
+
+  <button id="new-client-button">Adicionar Novo Cliente</button>
+
   <script>
-    // O código JavaScript permanece o mesmo
+    document.addEventListener("DOMContentLoaded", function() {
+      const newClientForm = document.querySelector(".new-client-form");
+      const newClientButton = document.getElementById("new-client-button");
+      const cancelButton = document.querySelector(".cancel-button");
+      const submitButton = document.querySelector(".submit-button");
+      const errorMessage = document.querySelector(".error-message");
+      const clientesTable = document.getElementById("clientes-table");
+
+      // Função para exibir o formulário de novo cliente
+      function showNewClientForm() {
+        newClientForm.style.display = "block";
+        errorMessage.style.display = "none";
+        newClientButton.disabled = true;
+      }
+
+      // Função para ocultar o formulário de novo cliente
+      function hideNewClientForm() {
+        newClientForm.style.display = "none";
+        newClientButton.disabled = false;
+      }
+
+      // Função para adicionar um novo cliente ao banco de dados
+      function adicionarCliente() {
+        const nomeInput = document.getElementById("nome-input");
+        const razaoSocialInput = document.getElementById("razao-social-input");
+        const cnpjInput = document.getElementById("cnpj-input");
+
+        const nome = nomeInput.value.trim();
+        const razaoSocial = razaoSocialInput.value.trim();
+        const cnpj = cnpjInput.value.trim();
+
+        if (nome || razaoSocial || cnpj) {
+          // Implemente aqui a lógica para adicionar o cliente ao banco de dados
+          const newClientRow = clientesTable.insertRow();
+
+          const nomeCell = newClientRow.insertCell();
+          nomeCell.textContent = nome;
+
+          const razaoSocialCell = newClientRow.insertCell();
+          razaoSocialCell.textContent = razaoSocial;
+
+          const cnpjCell = newClientRow.insertCell();
+          cnpjCell.textContent = cnpj;
+
+          hideNewClientForm();
+        } else {
+          errorMessage.textContent = "Preencha pelo menos um campo";
+          errorMessage.style.display = "block";
+        }
+      }
+
+      // Evento de clique no botão "Adicionar Novo Cliente"
+      newClientButton.addEventListener("click", showNewClientForm);
+
+      // Evento de clique no botão "Cancelar"
+      cancelButton.addEventListener("click", hideNewClientForm);
+
+      // Evento de clique no botão "OK"
+      submitButton.addEventListener("click", adicionarCliente);
+    });
   </script>
 </body>
 </html>
