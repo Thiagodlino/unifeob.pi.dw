@@ -40,6 +40,8 @@
         <input type="number" id="largura" step="0.1" min="0">
         <label for="altura">Altura (metros):</label>
         <input type="number" id="altura" step="0.1" min="0">
+        <label for="valorMetro">Valor do Metro (R$):</label>
+        <input type="number" id="valorMetro" step="0.01" min="0">
         <button onclick="calcularOrcamento()">Fazer Orçamento</button>
         <div class="result" id="resultado"></div>
     </div>
@@ -48,11 +50,12 @@
         function calcularOrcamento() {
             var largura = parseFloat(document.getElementById("largura").value);
             var altura = parseFloat(document.getElementById("altura").value);
+            var valorMetro = parseFloat(document.getElementById("valorMetro").value);
 
-            if (isNaN(largura) || isNaN(altura) || largura <= 0 || altura <= 0) {
+            if (isNaN(largura) || isNaN(altura) || isNaN(valorMetro) || largura <= 0 || altura <= 0 || valorMetro <= 0) {
                 document.getElementById("resultado").textContent = "Por favor, informe valores válidos.";
             } else {
-                var preco = (altura + 0.1) * (largura + 0.1) * 85;
+                var preco = (altura + 0.1) * (largura + 0.1) * valorMetro;
                 document.getElementById("resultado").textContent = "Preço: R$" + preco.toFixed(2);
             }
         }
