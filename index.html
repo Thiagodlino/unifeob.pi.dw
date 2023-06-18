@@ -5,15 +5,19 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         .container {
-            max-width: 400px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
         }
         h1 {
             color: #4CAF50;
             font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
         }
         label {
             display: block;
@@ -30,16 +34,29 @@
             color: white;
             border: none;
             cursor: pointer;
+            display: block;
+            margin: 20px auto;
         }
         .result {
             margin-top: 20px;
             font-weight: bold;
             color: #4CAF50;
             font-size: 24px;
+            text-align: center;
         }
         .price-input {
             color: #4CAF50;
             font-size: 18px;
+        }
+
+        /* Media queries for responsiveness */
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
